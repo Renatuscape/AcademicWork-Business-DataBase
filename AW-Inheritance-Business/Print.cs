@@ -19,5 +19,10 @@
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.ForegroundColor = ConsoleColor.Black;
         }
+
+        public static void WarningToConsole(string text)
+        {
+            TextToConsole("\n\t"+text, true, ConsoleColor.Red, ConsoleColor.Yellow);
+        }
     }
 }
