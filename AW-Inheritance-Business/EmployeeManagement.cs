@@ -25,5 +25,25 @@
             Researcher newManager = new(firstName, lastName, almaMater, doctorateTopic);
             _employeeDatabase.EmployeeList.Add(newManager);
         }
+
+        public List<Employee> FindEmployeesByLastName(string searchWord)
+        {
+            List<Employee> foundNames = new();
+
+            foreach (Employee employee in _employeeDatabase.EmployeeList)
+            {
+                if (employee.LastName.ToLower().Contains(searchWord.ToLower()))
+                {
+                    foundNames.Add(employee);
+                }
+            }
+
+            return foundNames;
+        }
+
+        public void DeleteEmployee(Employee employee)
+        {
+            _employeeDatabase.EmployeeList.Remove(employee);
+        }
     }
 }
