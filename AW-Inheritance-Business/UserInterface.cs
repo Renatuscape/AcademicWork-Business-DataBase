@@ -54,9 +54,9 @@ namespace AW_Inheritance_Business
                 var positionChoice = Console.ReadKey().KeyChar.ToString().ToUpper();
                 Console.WriteLine();
 
-                if (string.IsNullOrWhiteSpace(positionChoice) || string.IsNullOrWhiteSpace(firstName)|| string.IsNullOrWhiteSpace(lastName))
+                if (string.IsNullOrWhiteSpace(positionChoice) || string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
                 {
-                    Print.TextToConsole("First name, last name or type not valid.", true, ConsoleColor.Red, ConsoleColor.Yellow);
+                    Print.WarningToConsole("First name, last name or type not valid.");
                 }
                 else
                 {
@@ -69,30 +69,34 @@ namespace AW_Inheritance_Business
 
                         case "E":
 
-                            Print.TextToConsole($"\n\tUniversity where {firstName} {lastName} matriculated: ", false, ConsoleColor.Black, ConsoleColor.Cyan);
+                            Print.TextToConsole($"\n\t{firstName} {lastName}'s engineering field: ", false, ConsoleColor.Black, ConsoleColor.Cyan);
                             Print.TextToConsole("", false);
                             var type = Console.ReadLine();
+                            int experience;
 
-                            Print.TextToConsole($"\n\t{firstName} {lastName}'s experience in years: ", false, ConsoleColor.Black, ConsoleColor.Cyan);
-                            Print.TextToConsole("", false);
-                            try
+                            if (string.IsNullOrWhiteSpace(type))
                             {
-                                if (string.IsNullOrWhiteSpace(type))
+                                Print.WarningToConsole("Type of engineer cannot be null.");
+                                break;
+                            }
+                            else
+                            {
+                                try
                                 {
-                                    Print.TextToConsole("Alma Mater or dissertation topic cannot be null.", true, ConsoleColor.Red, ConsoleColor.Yellow);
+                                    Print.TextToConsole($"\n\t{firstName} {lastName}'s experience in years: ", false, ConsoleColor.Black, ConsoleColor.Cyan);
+                                    Print.TextToConsole("", false);
+                                    experience = Convert.ToInt32(Console.ReadLine());
+                                }
+                                catch
+                                {
+                                    Print.WarningToConsole("Experience must be a number.");
                                     break;
                                 }
-
-                                var experience = Convert.ToInt32(Console.ReadLine());
                                 employeeManagement.AddEngineer(firstName, lastName, type, experience);
                                 Print.TextToConsole($"Added {firstName} {lastName} to database.");
-                            }
-                            catch
-                            {
-                                Print.TextToConsole("Experience must be a number.", true, ConsoleColor.Red, ConsoleColor.Yellow);
-                            }
 
-                            break;
+                                break;
+                            }
 
                         case "R":
                             Print.TextToConsole($"\n\tUniversity where {firstName} {lastName} matriculated: ", false, ConsoleColor.Black, ConsoleColor.Cyan);
@@ -105,7 +109,7 @@ namespace AW_Inheritance_Business
 
                             if (string.IsNullOrWhiteSpace(almaMater) || string.IsNullOrWhiteSpace(dissertationTopic))
                             {
-                                Print.TextToConsole("Alma Mater or dissertation topic cannot be null.", true, ConsoleColor.Red, ConsoleColor.Yellow);
+                                Print.WarningToConsole("Alma Mater or dissertation topic cannot be null.");
                                 break;
                             }
 
@@ -116,14 +120,51 @@ namespace AW_Inheritance_Business
                 }
                 Print.TextToConsole("\n\t>> Press any key to continue.", true, ConsoleColor.Magenta);
                 Console.ReadKey();
+
             }
 
-            static void DeleteEmployee()
+            void DeleteEmployee()
             {
+                Print.TextToConsole($"\n\tPlease enter the last name of the employee you would like to delete: ", false, ConsoleColor.Black, ConsoleColor.Yellow);
+                Print.TextToConsole("", false);
+                var searchWord = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(searchWord))
+                {
+                    Print.WarningToConsole("Search term must contain at least one letter.");
+                }
+                else
+                {
+                    var foundEmployees = employeeManagement.FindEmployeesByLastName(searchWord);
+                    if (foundEmployees != null && foundEmployees.Count > 0)
+                    {
+                        for (int i = 0; i < foundEmployees.Count; i++)
+                        {
+                            Print.TextToConsole($"[{i}] {foundEmployees[i].FirstName} {foundEmployees[i].LastName}");
+                        }
+                        Print.TextToConsole("");
+                        Print.TextToConsole("Please enter number of the employee you would like to delete.");
+                        var numberInput = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
+                        Print.TextToConsole($"Are you sure you would like to delete {foundEmployees[numberInput].FirstName} {foundEmployees[numberInput].LastName}? [y/n]");
 
+                        var deleteChoice = Console.ReadKey().KeyChar.ToString();
+
+                        if (deleteChoice.ToLower() == "y")
+                        {
+                            employeeManagement.DeleteEmployee(foundEmployees[numberInput]);
+                        }
+                    }
+                    else
+                    {
+                        Print.WarningToConsole("No names found.");
+                    }
+                }
+
+                Print.TextToConsole("\n\t>> Press any key to continue.", true, ConsoleColor.Magenta);
+                Console.ReadKey();
+                Console.Clear();
             }
         }
 
- 
+
     }
 }
