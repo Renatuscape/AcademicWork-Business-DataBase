@@ -2,7 +2,6 @@
 {
     public class EmployeeDatabase
     {
-        private List<Employee> _employeeList = new();
-        public List<Employee> EmployeeList { get { return new(_employeeList); } private set { } }
+        public List<Employee> EmployeeList = new();
     }
 }

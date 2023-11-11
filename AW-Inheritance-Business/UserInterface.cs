@@ -135,22 +135,29 @@ namespace AW_Inheritance_Business
                 else
                 {
                     var foundEmployees = employeeManagement.FindEmployeesByLastName(searchWord);
+                    Print.TextToConsole("");
                     if (foundEmployees != null && foundEmployees.Count > 0)
                     {
                         for (int i = 0; i < foundEmployees.Count; i++)
                         {
-                            Print.TextToConsole($"[{i}] {foundEmployees[i].FirstName} {foundEmployees[i].LastName}");
+                            Print.TextToConsole($"\t[{i}] {foundEmployees[i].FirstName} {foundEmployees[i].LastName}", true, ConsoleColor.Magenta);
                         }
                         Print.TextToConsole("");
-                        Print.TextToConsole("Please enter number of the employee you would like to delete.");
+                        Print.TextToConsole("Please enter number of the employee you would like to delete: ", false);
                         var numberInput = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
-                        Print.TextToConsole($"Are you sure you would like to delete {foundEmployees[numberInput].FirstName} {foundEmployees[numberInput].LastName}? [y/n]");
-
+                        Print.TextToConsole($"\n\tAre you sure you would like to delete {foundEmployees[numberInput].FirstName} {foundEmployees[numberInput].LastName}? [y/n]", true, ConsoleColor.DarkRed);
+                        Print.TextToConsole("", false);
                         var deleteChoice = Console.ReadKey().KeyChar.ToString();
 
                         if (deleteChoice.ToLower() == "y")
                         {
+                            Console.Clear();
+                            Print.WarningToConsole($"{foundEmployees[numberInput].FirstName} {foundEmployees[numberInput].LastName} successfully deleted.");
                             employeeManagement.DeleteEmployee(foundEmployees[numberInput]);
+                        }
+                        else
+                        {
+                            Print.WarningToConsole($"Employee deletion cancelled.");
                         }
                     }
                     else
